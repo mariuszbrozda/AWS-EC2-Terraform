@@ -18,6 +18,16 @@ data "aws_ami" "latest_ami" {
   owners      = ["amazon"]
 
   filter {
+    name   = "architecture"
+    values = ["x86_64"]
+  }
+
+  filter {
+    name   = "free-tier-eligible"
+    values = [true]
+  }
+
+  filter {
     name   = "root-device-type"
     values = ["ebs"]
   }
