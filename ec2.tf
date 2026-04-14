@@ -1,13 +1,19 @@
 module "vpc" {
-  source = "./modules/terraform-aws-vpc"
-  profile        = local.profile
-  region         = local.region
-  vpc_prefix  = local.vpc_prefix
-  vpc_name  = local.vpc_name
-  vpc_cidr_block  = local.vpc_name
-  enable_dns_support  = local.vpc_name
-  enable_dns_hostnames  = local.vpc_name
-  assign_generated_ipv6_cidr_block  = local.vpc_name
+  source                           = "./modules/terraform-aws-vpc"
+  profile                          = local.profile
+  region                           = local.region
+  vpc_prefix                       = local.vpc_prefix
+  vpc_name                         = local.vpc_name
+  vpc_cidr_block                   = local.vpc_cidr_block
+  enable_dns_support               = local.enable_dns_support
+  enable_dns_hostnames             = local.enable_dns_hostnames
+  assign_generated_ipv6_cidr_block = local.assign_generated_ipv6_cidr_block
+  igw_name                         = local.igw_name
+  azs                              = local.azs
+  cidr_blocks                      = local.cidr_blocks
+  public_ips                       = local.public_ips
+  subnet_names                     = local.subnet_names
+  route_table_name                 = local.route_table_name
 }
 
 resource "aws_instance" "ec2_instance" {
@@ -29,7 +35,7 @@ resource "null_resource" "trigger_on_instance_id" {
   }
 
   provisioner "local-exec" {
-    command    = "echo ${var.instance_name}:${self.private_ip} >> ec2s.txt"
+    command    = "echo ${var.instance_name}:${aws_instance.ec2_instance.private_ip} >> ec2s.txt"
     on_failure = continue
   }
 
