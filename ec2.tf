@@ -1,3 +1,15 @@
+module "vpc" {
+  source = "./modules/terraform-aws-vpc"
+  profile        = local.profile
+  region         = local.region
+  vpc_prefix  = local.vpc_prefix
+  vpc_name  = local.vpc_name
+  vpc_cidr_block  = local.vpc_name
+  enable_dns_support  = local.vpc_name
+  enable_dns_hostnames  = local.vpc_name
+  assign_generated_ipv6_cidr_block  = local.vpc_name
+}
+
 resource "aws_instance" "ec2_instance" {
   ami                         = data.aws_ami.latest_ami.id
   instance_type               = var.instance_type
@@ -5,6 +17,16 @@ resource "aws_instance" "ec2_instance" {
   subnet_id                   = data.aws_subnet.public_subnet_1a.id
   vpc_security_group_ids      = [aws_security_group.sg.id]
   key_name                    = aws_key_pair.aws_keypair.key_name
+
+  tags = {
+    Name = "${var.prefix}-${var.instance_name}"
+  }
+}
+
+resource "null_resource" "trigger_on_instance_id" {
+  triggers = {
+    id = aws_instance.ec2_instance.id
+  }
 
   provisioner "local-exec" {
     command    = "echo ${var.instance_name}:${self.private_ip} >> ec2s.txt"
@@ -33,9 +55,5 @@ resource "aws_instance" "ec2_instance" {
   provisioner "remote-exec" {
     inline     = ["sudo hostnamectl set-hostname ${var.instance_name}"]
     on_failure = continue
-  }
-
-  tags = {
-    Name = "${var.prefix}-${var.instance_name}"
   }
 }
