@@ -3,13 +3,15 @@ data "aws_vpc" "vpc" {
   depends_on = [aws_vpc.main_vpc]
 }
 
-data "aws_subnet" "public_subnet_1a" {
-  vpc_id = data.aws_vpc.vpc.id
-  tags = {
-    "Name" = "*public-subnet*"
+data "aws_subnets" "public_subnets" {
+  filter {
+    name   = "vpc-id"
+    values = [data.aws_vpc.vpc.id]
   }
+
   filter {
     name   = "tag:Name"
-    values = ["*1a*"]
+    values = ["*public*"]
   }
+  depends_on = [aws_vpc.main_vpc, aws_subnet.subnet]
 }
