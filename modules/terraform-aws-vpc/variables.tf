@@ -6,8 +6,8 @@ variable "region" {
   type = string
 }
 
-variable "vpc_prefix" {
-  description = "VPC prefix"
+variable "prefix" {
+  description = "Prefix"
   type        = string
 }
 

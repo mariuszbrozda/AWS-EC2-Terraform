@@ -6,7 +6,7 @@ resource "aws_vpc" "main_vpc" {
   assign_generated_ipv6_cidr_block = var.assign_generated_ipv6_cidr_block
 
   tags = {
-    Name = "${var.vpc_prefix}-${var.vpc_name}"
+    Name = "${var.prefix}-${var.vpc_name}"
   }
 }
 
@@ -16,7 +16,7 @@ resource "aws_internet_gateway" "main_igw" {
   vpc_id = aws_vpc.main_vpc.id
 
   tags = {
-    Name = "${var.vpc_prefix}-${var.igw_name}"
+    Name = "${var.prefix}-${var.igw_name}"
   }
   depends_on = [aws_vpc.main_vpc]
 }
@@ -30,7 +30,7 @@ resource "aws_subnet" "subnet" {
   map_public_ip_on_launch = var.public_ips[count.index]
 
   tags = {
-    Name = "${var.vpc_prefix}-${var.subnet_names[count.index]}"
+    Name = "${var.prefix}-${var.subnet_names[count.index]}"
   }
   depends_on = [aws_vpc.main_vpc]
 }
@@ -45,7 +45,7 @@ resource "aws_route_table" "public_route_table" {
   }
 
   tags = {
-    Name = "${var.vpc_prefix}-${var.route_table_name}"
+    Name = "${var.prefix}-${var.route_table_name}"
   }
   depends_on = [aws_vpc.main_vpc, aws_internet_gateway.main_igw]
 }

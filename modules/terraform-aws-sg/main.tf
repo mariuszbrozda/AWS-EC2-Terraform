@@ -1,5 +1,4 @@
 # Security Groups
-
 resource "aws_security_group" "sg" {
   name        = var.sg_name
   description = "Allow HTTP & SSH inbound traffic"

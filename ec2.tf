@@ -2,7 +2,7 @@ module "vpc" {
   source                           = "./modules/terraform-aws-vpc"
   profile                          = local.profile
   region                           = local.region
-  vpc_prefix                       = local.vpc_prefix
+  prefix                           = local.prefix
   vpc_name                         = local.vpc_name
   vpc_cidr_block                   = local.vpc_cidr_block
   enable_dns_support               = local.enable_dns_support
@@ -16,11 +16,18 @@ module "vpc" {
   route_table_name                 = local.route_table_name
 }
 
-resource "aws_instance" "ec2_instance" {
+module "sg" {
+  source        = "./modules/terraform-aws-sg"
+  sg_name       = local.sg_name
+  ingress_rules = local.ingress_rules
+  prefix        = local.prefix
+}
+
+esource "aws_instance" "ec2_instance" {
   ami                         = data.aws_ami.latest_ami.id
   instance_type               = var.instance_type
   associate_public_ip_address = true
-  subnet_id                   = data.aws_subnet.public_subnet_1a.id
+  subnet_id                   = data.aws_subnet.public_subnet.id
   vpc_security_group_ids      = [aws_security_group.sg.id]
   key_name                    = aws_key_pair.aws_keypair.key_name
 

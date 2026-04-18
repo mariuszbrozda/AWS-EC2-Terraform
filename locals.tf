@@ -1,7 +1,7 @@
 locals {
   profile                          = "devops"
   region                           = "us-east-1"
-  vpc_prefix                       = "dev"
+  prefix                           = "dev"
   vpc_name                         = "main-vpc"
   vpc_cidr_block                   = "192.168.0.0/16"
   enable_dns_support               = true
@@ -13,4 +13,33 @@ locals {
   public_ips                       = [true, false, true, false]
   subnet_names                     = ["public-subnet-1a", "private-subnet-1b", "public-subnet-1c", "private-subnet-1d"]
   route_table_name                 = "internet-route"
+}
+
+# Security Groups
+locals {
+
+  sg_name = "ec2_sg"
+  ingress_rules = [
+    {
+      "description" = "Rule allowing ssh inbound traffic"
+      "from_port"   = "22"
+      "to_port"     = "22"
+      "protocol"    = "TCP"
+      "cidr_blocks" = "0.0.0.0/0"
+    },
+    {
+      "description" = "Rule allowing http inbound traffic"
+      "from_port"   = "80"
+      "to_port"     = "80"
+      "protocol"    = "TCP"
+      "cidr_blocks" = "0.0.0.0/0"
+    },
+    {
+      "description" = "Rule allowing ICMP ping from internet"
+      "from_port"   = "0"
+      "to_port"     = "0"
+      "protocol"    = "icmp"
+      "cidr_blocks" = "0.0.0.0/0"
+    }
+  ]
 }
