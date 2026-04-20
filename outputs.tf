@@ -1,26 +1,15 @@
-output "key_pair_name" {
-  description = "SSH public key name"
-  value       = aws_key_pair.aws_keypair.key_name
+output "vpc-cidr" {
+  value = module.vpc.vpc_cidr
 }
 
-output "sg_http_rule" {
-  value = var.ingress_rules[*]
+output "ssh-key" {
+  value = module.ssh.key_pair_name
 }
 
-output "ami" {
-  value = data.aws_ami.latest_ami.id
+output "ec2-sg-name" {
+  value = module.sg.sg_name
 }
 
-output "public_subnet_1a_id" {
-  description = "Subnet ID"
-  value       = data.aws_subnet.public_subnet_1a.id
-}
-
-output "ec2_public_ip_address" {
-  description = "EC2 Public IP"
-  value       = aws_instance.ec2_instance.public_ip
-}
-
-output "webserver_url" {
-  value = join("//", ["http:", aws_instance.ec2_instance.public_ip])
+output "webserver-url" {
+  value = module.ec2.webserver_url
 }

@@ -45,7 +45,15 @@ terraform fmt && terraform validate
 ```
 
 #### Plan and apply AWS resources
+
+#### VPC & subnets
+```bash
+terraform plan -target=module.vpc.aws_vpc.main_vpc -target=module.vpc.aws_subnet.subnet
+terraform apply -auto-approve -target=module.vpc.aws_vpc.main_vpc -target=module.vpc.aws_subnet.subnet
+```
+
+#### Remaining resources
 ```bash
 terraform plan
-terraform apply
+terraform apply -auto-approve
 ```
